@@ -1,6 +1,10 @@
 # Map
-The map header file, cpp file, and test driver.
+The map header file, cpp file, and test driver, with corresponding observers.
 
 ## todo
-1. map builder.
-2. link character/ item objects to the map.
+1. map builder pattern.
+2. fix pathfinder
+3. Link items to map.
+3.1 Character
+3.2 Monster
+3.3 Items
