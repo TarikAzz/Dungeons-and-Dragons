@@ -76,13 +76,9 @@ int Map::getEndY()
 
 int Map::getCol()
 { 
-	return Map::column; 
+	return column; 
 }
 
-bool Map::validatePath()
-{
-	return true;
-}
 void Map::fillCell(int x, int y, string obj) 
 {
 
@@ -125,6 +121,53 @@ bool Map::isOccupied(int x, int y)
 		return true;
 	}
 	
+}
+
+bool Map::validatePath(int x, int y)
+{
+	// If x, y is outside maze, return false.
+	if (x < 0 || x > row-1 || y < 0 || y > column-1)
+		return false;
+
+	// If x,y is the goal, return true.
+	if (grid[x][y] == 'E') {
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < column; j++) {
+				if (grid[i][j] == '+')
+					grid[i][j] = '_';
+			}
+		}
+		grid[startX][startY] = 'S';
+		return true;
+	}
+
+	// If x,y is occupied or has been visited
+	if (grid[x][y] == 'W' || grid[x][y] == '+')
+		return false;
+
+	// Mark where the algorithm has gone
+	grid[x][y] = '+';
+
+	// If right of x,y is open, go right.
+	if (validatePath(x, y+1) == true) {
+		return true;
+	}
+	// If up of x,y is open, go straight.
+	else if (validatePath(x-1, y) == true) {
+		return true;
+	}
+	// If left of x,y is open, go left.
+	else if (validatePath(x, y-1) == true) {
+		return true;
+	}
+	// If down north of x,y is open, go down.
+	else if (validatePath(x+1, y) == true) {
+		return true;
+	}
+	else {
+		grid[x][y] = '_';
+		return false;
+	}
 }
 
 void Map::printMap()
@@ -172,17 +215,17 @@ void Map::load(string name)
 
 }
 
-/*void Map::createMap()
+void Map::createMap()
 {
 	string ans;
 	cout << "\nPlease enter a file name: ";
 	string fileName;
 	cin >> fileName;
 
-	do 
+	do
 	{
 		cout << "Map Creation:" << endl;
-		
+
 		cout << "\nEnter width of map: ";
 		int row;
 		cin >> row;
@@ -200,6 +243,8 @@ void Map::load(string name)
 
 		Map* map1 = new Map(row, col, startX, startY, endX, endY, CString(fileName.c_str()));
 		string obj;
+		int x = 0;
+		int y = 0;
 		do
 		{
 			cout << "\n-----Displaying Current map-------" << endl;
@@ -214,6 +259,14 @@ void Map::load(string name)
 			map1->fillCell(row, col, obj);
 		} while (true);
 
+		if (map1->validatePath(startX, startY))
+		{
+			cout << "success!" << endl;
+//		cout << "\n\nMap has not been validated! restarting\n\n new map:\n" << endl;
+		}
+
+		map1->printMap();
+
 		cout << "Do you want to create another level in this campaign (y/n)?: ";
 		cin >> ans;
 		if (ans == "y")
@@ -225,7 +278,7 @@ void Map::load(string name)
 		map1->save();
 
 	} while (ans == "y");
-	cout << "\nCampaign finished!"<<endl;
+	cout << "\nCampaign finished!" << endl;
 }
 
 void Map::editMap(string name)
@@ -252,7 +305,7 @@ void Map::editMap(string name)
 	} while (true);
 	m->save();
 	cout << "Changes have been saved!" << endl;
-}*/  
+}
 
 
 void Map::Serialize(CArchive & archive)
