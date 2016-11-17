@@ -1,0 +1,10 @@
+#pragma once
+#include "Armor.h"
+#include "Belt.h"
+#include "Boots.h"
+#include "Helmet.h"
+#include "Sheild.h"
+#include "Ring.h"
+#include "Item.h"
+#include "Weapons.h"
+#include "Treasure.h"
